@@ -1,0 +1,18 @@
+.download-container {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+    cursor: pointer;
+}
+
+.download-button {
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(173, 216, 230, 0.541);
+    margin-left: 20px;
+}
