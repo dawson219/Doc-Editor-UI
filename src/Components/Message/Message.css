@@ -1,0 +1,6 @@
+.message-alert {
+    position: absolute;
+    bottom: 5rem;
+    right: 5rem;
+    z-index: 10001;
+}

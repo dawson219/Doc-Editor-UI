@@ -32,6 +32,7 @@ const ShareDocument = () => {
         quill.setContents(delta);
       }
     });
+    // eslint-disable-next-line
   }, []);
 
   const downloadAsDocx = () => {

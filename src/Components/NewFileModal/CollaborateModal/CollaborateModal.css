@@ -1,0 +1,36 @@
+.private {
+    background-color: red;
+}
+
+.userRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.side-button {
+    outline: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 2rem;
+    height: 100%;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-radius: 2rem;
+    cursor: pointer;
+    min-width: 8rem;
+}
+
+.close {
+    background-color: red;
+    color: white;
+}
+
+.tick {
+    background-color: green;
+    color: white;
+}

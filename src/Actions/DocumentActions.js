@@ -2,12 +2,14 @@ import axios from "axios";
 import apis from "../Apis/apis";
 import { getHeaders } from "../Apis/helper";
 import store from "../store";
-import { setDocuments } from "../Slices/DocumentSlice";
+import { setCollaborateDocuments, setDocuments } from "../Slices/DocumentSlice";
+import { setIsLoading, setMessage } from "../Slices/UserSlice";
 
 const { dispatch } = store;
 
 export const fetchDocuments = async (user, callback) => {
   try {
+    dispatch(setIsLoading(true));
     const res = await axios.post(
       `${apis.document}/fetch-by-user`,
       {
@@ -18,18 +20,41 @@ export const fetchDocuments = async (user, callback) => {
 
     if (res.status === 200) {
       dispatch(setDocuments(res.data.documents));
-      callback(true);
+      dispatch(setCollaborateDocuments(res.data.collaborate_documents));
+      dispatch(
+        setMessage({
+          message: res.data.message,
+          severity: res.data.status === "500" ? "error" : "success",
+        })
+      );
+      if (res.data.status === "200") callback(true);
+      dispatch(setIsLoading(false));
       return;
     }
     callback(false);
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Fetching Documents",
+        severity: "error",
+      })
+    );
   } catch (e) {
     console.log("Error Occurred in API call", e.message);
+    dispatch(setIsLoading(false));
     callback(false);
+    dispatch(
+      setMessage({
+        message: "Error in Fetching Documents",
+        severity: "error",
+      })
+    );
   }
 };
 
 export const createDocument = async (user, title, callback) => {
   try {
+    dispatch(setIsLoading(true));
     const res = await axios.post(
       `${apis.document}/create`,
       {
@@ -40,15 +65,38 @@ export const createDocument = async (user, title, callback) => {
     );
 
     if (res.status === 200) {
-      callback(true, res.data.document_id);
+      dispatch(
+        setMessage({
+          message: res.data.message,
+          severity: res.data.status === "500" ? "error" : "success",
+        })
+      );
+      dispatch(setIsLoading(false));
+      if (res.data.status === "200") callback(true, res.data.document_id);
+      return
     }
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Creating Document",
+        severity: "error",
+      })
+    );
   } catch (e) {
     console.log("Error Occurred in API call", e.message);
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Creating Document",
+        severity: "error",
+      })
+    );
   }
 };
 
 export const deleteDocument = async (user, documentId, callback) => {
   try {
+    dispatch(setIsLoading(true));
     const res = await axios.post(
       `${apis.document}/delete`,
       {
@@ -59,15 +107,38 @@ export const deleteDocument = async (user, documentId, callback) => {
     );
 
     if (res.status === 200) {
-      callback(true, res.data.document_id);
+      dispatch(
+        setMessage({
+          message: res.data.message,
+          severity: res.data.status === "500" ? "error" : "success",
+        })
+      );
+      dispatch(setIsLoading(false));
+      if (res.data.status === "200") callback(true, res.data.document_id);
+      return
     }
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Deleting Document",
+        severity: "error",
+      })
+    );
   } catch (e) {
     console.log("Error Occurred in API call", e.message);
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Deleting Documet",
+        severity: "error",
+      })
+    );
   }
 };
 
 export const getDocument = async (user, documentId, callback) => {
   try {
+    dispatch(setIsLoading(true));
     const res = await axios.post(
       `${apis.document}/get`,
       {
@@ -78,32 +149,75 @@ export const getDocument = async (user, documentId, callback) => {
     );
 
     if (res.status === 200) {
-      callback(true, res.data);
+      dispatch(
+        setMessage({
+          message: res.data.message,
+          severity: res.data.status === "500" ? "error" : "success",
+        })
+      );
+      dispatch(setIsLoading(false));
+      if (res.data.status === "200") callback(true, res.data);
+      return
     }
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Fetching document",
+        severity: "error",
+      })
+    );
   } catch (e) {
-    console.log("Error Occurred in API call", e.message);
+    console.log("Error Occurred in API call", e);
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Fetching document",
+        severity: "error",
+      })
+    );
   }
 };
 
 export const getShareDocument = async (shareId, callback) => {
   try {
-    const res = await axios.post(
-      `${apis.document}/share/get`,
-      {
-        share_id: shareId,
-      }
-    );
+    dispatch(setIsLoading(true));
+    const res = await axios.post(`${apis.document}/share/get`, {
+      share_id: shareId,
+    });
 
     if (res.status === 200) {
-      callback(true, res.data);
+      dispatch(
+        setMessage({
+          message: res.data.message,
+          severity: res.data.status === "500" ? "error" : "success",
+        })
+      );
+      if (res.data.status === "200") callback(true, res.data);
+      dispatch(setIsLoading(false));
+      return
     }
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Fetching Document",
+        severity: "error",
+      })
+    );
   } catch (e) {
     console.log("Error Occurred in API call", e.message);
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Fetching Document",
+        severity: "error",
+      })
+    );
   }
 };
 
 export const shareDocument = async (user, documentId, isShare, callback) => {
   try {
+    dispatch(setIsLoading(true));
     const res = await axios.post(
       `${apis.document}/share`,
       {
@@ -115,10 +229,82 @@ export const shareDocument = async (user, documentId, isShare, callback) => {
     );
 
     if (res.status === 200) {
-      callback(true, res.data.share_id);
+      dispatch(
+        setMessage({
+          message: res.data.message,
+          severity: res.data.status === "500" ? "error" : "success",
+        })
+      );
+      if (res.data.status === "200") callback(true, res.data.share_id);
+      dispatch(setIsLoading(false));
+      return
     }
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Sharing Document",
+        severity: "error",
+      })
+    );
   } catch (e) {
     console.log("Error Occurred in API call", e.message);
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Sharing Document",
+        severity: "error",
+      })
+    );
+  }
+};
+
+export const collaborateDocument = async (
+  user,
+  documentId,
+  isCollaborate,
+  users,
+  callback
+) => {
+  try {
+    dispatch(setIsLoading(true));
+    const res = await axios.post(
+      `${apis.document}/collaborate`,
+      {
+        owner_id: user.username,
+        document_id: documentId,
+        is_collaborate: isCollaborate,
+        users: users,
+      },
+      getHeaders()
+    );
+
+    if (res.status === 200) {
+      dispatch(
+        setMessage({
+          message: res.data.message,
+          severity: res.data.status === "500" ? "error" : "success",
+        })
+      );
+      if (res.data.status === "200") callback(true);
+      dispatch(setIsLoading(false));
+      return
+    }
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Collab",
+        severity: "error",
+      })
+    );
+  } catch (e) {
+    console.log("Error Occurred in API call", e.message);
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Collab",
+        severity: "error",
+      })
+    );
   }
 };
 
@@ -130,6 +316,7 @@ export const updateDocument = async (
   callback
 ) => {
   try {
+    dispatch(setIsLoading(true));
     const res = await axios.post(
       `${apis.document}/update`,
       {
@@ -142,9 +329,31 @@ export const updateDocument = async (
     );
 
     if (res.status === 200) {
-      callback(true, res.data.document_id);
+      dispatch(
+        setMessage({
+          message: res.data.message,
+          severity: res.data.status === "500" ? "error" : "success",
+        })
+      );
+      if (res.data.status === "200") callback(true, res.data.document_id);
+      dispatch(setIsLoading(false));
+      return
     }
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Updatig Document",
+        severity: "error",
+      })
+    );
   } catch (e) {
     console.log("Error Occurred in API call", e.message);
+    dispatch(setIsLoading(false));
+    dispatch(
+      setMessage({
+        message: "Error in Updating Document",
+        severity: "error",
+      })
+    );
   }
 };

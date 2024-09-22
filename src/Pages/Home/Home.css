@@ -131,6 +131,48 @@
   opacity: 1;
 }
 
+.space-selector {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding-bottom: 1rem;
+}
+
+.space-selector-title {
+  margin: 0 1.5rem 0 1.5rem;
+}
+
+.space-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid grey;
+  border-radius: 2rem;
+  cursor: pointer;
+  background-color: white;
+}
+
+.space-left {
+  min-width: 7.5rem;
+  border-right: 1px solid gray;
+  padding: 0.5rem 1rem;
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+}
+
+.space-right {
+  min-width: 7.5rem;
+  padding: 0.5rem 1rem;
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+
+.space-active {
+  background-color: green;
+  color: white;
+}
+
 .home-wrapper {
   height: 100%;
   width: 100%;
